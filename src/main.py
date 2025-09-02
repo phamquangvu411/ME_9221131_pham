@@ -294,7 +294,13 @@ print("Best parameters for Random Forest:", grid_search_rf.best_params_)
 print("Best score for Random Forest:", grid_search_rf.best_score_)
 
 """
-Best parameters for Random Forest: {'classifier__bootstrap': False, 'classifier__class_weight': 'balanced', 'classifier__max_depth': 7, 'classifier__max_features': 'sqrt', 'classifier__min_samples_leaf': 4, 'classifier__min_samples_split': 5, 'classifier__n_estimators': 300}
+Best parameters for Random Forest: {'bootstrap': False,
+                                    'class_weight': 'balanced', 
+                                    'max_depth': 7, 
+                                    'max_features': 'sqrt', 
+                                    'min_samples_leaf': 4, 
+                                    'min_samples_split': 5, 
+                                    'n_estimators': 300}
 Best score for Random Forest: 0.4066396117394448
 """
 
@@ -302,7 +308,15 @@ print("Best parameters for XGBoost:", grid_search_xgb.best_params_)
 print("Best score for XGBoost:", grid_search_xgb.best_score_)
 
 """
-Best parameters for XGBoost: {'classifier__colsample_bytree': 0.8, 'classifier__learning_rate': 0.01, 'classifier__max_depth': 5, 'classifier__min_child_weight': 3, 'classifier__n_estimators': 400, 'classifier__reg_alpha': 1, 'classifier__reg_lambda': 1, 'classifier__scale_pos_weight': 4, 'classifier__subsample': 0.6}
+Best parameters for XGBoost: {'colsample_bytree': 0.8, 
+                              'learning_rate': 0.01, 
+                              'max_depth': 5, 
+                              'min_child_weight': 3, 
+                              'n_estimators': 400, 
+                              'reg_alpha': 1, 
+                              'reg_lambda': 1, 
+                              'scale_pos_weight': 4, 
+                              'subsample': 0.6}
 Best score for XGBoost: 0.40752498684440197
 """
 
@@ -398,8 +412,19 @@ for label in best_models.keys():
     plt.legend(loc='lower right')
     
     plt.show()
-    
 
+# Feature Importance
+feature_importance_dict = {}
+
+for name, model in best_models.items():
+    if hasattr(model, "feature_importances_"):
+        importances = pd.Series(model.feature_importances_, index=X_train.columns)
+        importances = importances.sort_values(ascending=False)
+        feature_importance_dict[name] = importances
+
+feature_importance_df = pd.DataFrame(feature_importance_dict)
+
+        
 # Ranking der PSPs
 # Change test_df from transaction-wise to payment-wise 
 # Create binary flag
